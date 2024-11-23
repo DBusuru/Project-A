@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome to Your Account</h2>
+    <p>Hello, {{ user.username }}! This is your account dashboard.</p>
+
+    <div class="profile-section">
+        <h3>Your Profile Picture</h3>
+        <img src="{{ user.profile_pic.url }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 200px;">
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'update_profile' %}">
+            {% csrf_token %}
+            <label for="profile_picture">Upload a new profile picture:</label>
+            <input type="file" name="profile_picture" id="profile_picture">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
