@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2>Search Results</h2>
+    
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'img/default-product.jpg' %}" class="card-img-top" alt="Default Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.price }}</p>
+                            <a href="{% url 'shopease:product_detail' product.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products found matching your search criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

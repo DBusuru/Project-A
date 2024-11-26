@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Billing Details -->
+            <div class="col-md-7">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">Billing address</h3>
+                    </div>
+                    
+                    <form method="post" action="{% url 'shopease:process_checkout' %}">
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="form-group">
+                            <input class="input" type="text" name="first_name" placeholder="First Name" 
+                                   value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="last_name" placeholder="Last Name" 
+                                   value="{{ user.last_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="email" name="email" placeholder="Email" 
+                                   value="{{ user.email }}" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="address" placeholder="Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="city" placeholder="City" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="country" placeholder="Country" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="zip_code" placeholder="ZIP Code" required>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="tel" name="phone" placeholder="Phone Number" required>
+                        </div>
+                        
+                        <!-- Payment Method -->
+                        <div class="section-title">
+                            <h3 class="title">Payment Method</h3>
+                        </div>
+                        <div class="payment-method">
+                            <div class="input-radio">
+                                <input type="radio" name="payment_method" id="payment-1" value="Credit Card" checked>
+                                <label for="payment-1">
+                                    <span></span>
+                                    Credit Card
+                                </label>
+                            </div>
+                            <div class="input-radio">
+                                <input type="radio" name="payment_method" id="payment-2" value="PayPal">
+                                <label for="payment-2">
+                                    <span></span>
+                                    PayPal
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="primary-btn order-submit">
+                            Place order
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Order Details -->
+            <div class="col-md-5 order-details">
+                <div class="section-title text-center">
+                    <h3 class="title">Your Order</h3>
+                </div>
+                <div class="order-summary">
+                    <div class="order-col">
+                        <div><strong>PRODUCT</strong></div>
+                        <div><strong>TOTAL</strong></div>
+                    </div>
+                    <div class="order-products">
+                        {% for item in cart_items %}
+                        <div class="order-col">
+                            <div>{{ item.quantity }}x {{ item.variant.product.name }}</div>
+                            <div>${{ item.get_total }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="order-col">
+                        <div>Shipping</div>
+                        <div><strong>FREE</strong></div>
+                    </div>
+                    <div class="order-col">
+                        <div><strong>TOTAL</strong></div>
+                        <div><strong class="order-total">${{ total }}</strong></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Order Details -->
+        </div>
+    </div>
+</div>
+{% endblock %}

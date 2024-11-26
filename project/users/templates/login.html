@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Login</h2>
+                    
+                    {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Regular login form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>- OR -</p>
+                        
+                        <!-- Google Login Button -->
+                        {% get_providers as socialaccount_providers %}
+                        {% for provider in socialaccount_providers %}
+                            {% if provider.id == 'google' %}
+                            <a href="{% provider_login_url provider.id %}" class="btn btn-danger btn-block">
+                                <i class="fab fa-google"></i> Login with Google
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="{% url 'users:register' %}">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+    }
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }
+    .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+{% endblock %}

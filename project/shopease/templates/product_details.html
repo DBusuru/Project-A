@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- Product main img -->
+            <div class="col-md-5 col-md-push-2">
+                <div id="product-main-img">
+                    <div class="product-preview">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    </div>
+                    {% for image in product.images.all %}
+                    <div class="product-preview">
+                        <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Product main img -->
+
+            <!-- Product thumb imgs -->
+            <div class="col-md-2 col-md-pull-5">
+                <div id="product-imgs">
+                    <div class="product-preview">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    </div>
+                    {% for image in product.images.all %}
+                    <div class="product-preview">
+                        <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Product thumb imgs -->
+
+            <!-- Product details -->
+            <div class="col-md-5">
+                <div class="product-details">
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    <div>
+                        <div class="product-rating">
+                            {% for i in "12345"|make_list %}
+                            <i class="fa fa-star{% if forloop.counter > avg_rating|floatformat:"0" %}-o empty{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <a class="review-link" href="#reviews">{{ reviews.count }} Review(s)</a>
+                    </div>
+                    <div>
+                        {% with default_variant=product.variants.first %}
+                        <h3 class="product-price">${{ default_variant.price }}
+                            {% if product.discount %}
+                            <del class="product-old-price">${{ product.original_price }}</del>
+                            {% endif %}
+                        </h3>
+                        <span class="product-available">In Stock</span>
+                        {% endwith %}
+                    </div>
+                    <p>{{ product.description }}</p>
+
+                    <form method="post" action="{% url 'shopease:add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        
+                        {% if product.variants.exists %}
+                        <div class="product-options">
+                            <label>
+                                Variant
+                                <select name="variant" class="input-select" required>
+                                    {% for variant in product.variants.all %}
+                                    <option value="{{ variant.id }}">
+                                        {{ variant.name }} - ${{ variant.price }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        <div class="add-to-cart">
+                            <div class="qty-label">
+                                Qty
+                                <div class="input-number">
+                                    <input type="number" name="quantity" value="1" min="1">
+                                    <span class="qty-up">+</span>
+                                    <span class="qty-down">-</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="add-to-cart-btn">
+                                <i class="fa fa-shopping-cart"></i> add to cart
+                            </button>
+                        </div>
+                    </form>
+
+                    <ul class="product-btns">
+                        <li>
+                            <button onclick="toggleWishlist({{ product.id }})" class="wishlist-btn">
+                                <i class="fa {% if in_wishlist %}fa-heart{% else %}fa-heart-o{% endif %}"
+                                   id="wishlist-icon-{{ product.id }}"></i>
+                                add to wishlist
+                            </button>
+                        </li>
+                    </ul>
+
+                    <ul class="product-links">
+                        <li>Category:</li>
+                        <li><a href="{% url 'shopease:category' product.category.id %}">{{ product.category.category_name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /Product details -->
+
+            <!-- Product tab -->
+            <div class="col-md-12">
+                <div id="product-tab">
+                    <!-- product tab nav -->
+                    <ul class="tab-nav">
+                        <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+                        <li><a data-toggle="tab" href="#tab2">Details</a></li>
+                        <li><a data-toggle="tab" href="#tab3">Reviews ({{ reviews.count }})</a></li>
+                    </ul>
+                    <!-- /product tab nav -->
+
+                    <!-- product tab content -->
+                    <div class="tab-content">
+                        <!-- tab1  -->
+                        <div id="tab1" class="tab-pane fade in active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>{{ product.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab1  -->
+
+                        <!-- tab2  -->
+                        <div id="tab2" class="tab-pane fade in">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Add product details here -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab2  -->
+
+                        <!-- tab3  -->
+                        <div id="tab3" class="tab-pane fade in">
+                            <div class="row">
+                                <!-- Reviews -->
+                                <div class="col-md-6">
+                                    <div id="reviews">
+                                        <ul class="reviews">
+                                            {% for review in reviews %}
+                                            <li>
+                                                <div class="review-heading">
+                                                    <h5 class="name">{{ review.user.get_full_name|default:review.user.username }}</h5>
+                                                    <p class="date">{{ review.created_at|date:"M d, Y" }}</p>
+                                                    <div class="review-rating">
+                                                        {% for i in "12345"|make_list %}
+                                                        <i class="fa fa-star{% if forloop.counter > review.rating %}-o empty{% endif %}"></i>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="review-body">
+                                                    <p>{{ review.comment }}</p>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- /Reviews -->
+
+                                <!-- Review Form -->
+                                <div class="col-md-6">
+                                    <div id="review-form">
+                                        <form class="review-form" method="post" action="{% url 'shopease:add_review' product.id %}">
+                                            {% csrf_token %}
+                                            <textarea class="input" name="comment" placeholder="Your Review"></textarea>
+                                            <div class="input-rating">
+                                                <span>Your Rating: </span>
+                                                <div class="stars">
+                                                    <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+                                                    <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+                                                    <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+                                                    <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+                                                    <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+                                                </div>
+                                            </div>
+                                            <button class="primary-btn">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /Review Form -->
+                            </div>
+                        </div>
+                        <!-- /tab3  -->
+                    </div>
+                    <!-- /product tab content  -->
+                </div>
+            </div>
+            <!-- /product tab -->
+
+            <!-- Related Products -->
+            <div class="col-md-12">
+                <div class="section-title text-center">
+                    <h3 class="title">Related Products</h3>
+                </div>
+                <div class="row">
+                    {% for related in related_products %}
+                    <!-- product -->
+                    <div class="col-md-3 col-xs-6">
+                        <div class="product">
+                            <div class="product-img">
+                                <img src="{{ related.image.url }}" alt="">
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ related.category.category_name }}</p>
+                                <h3 class="product-name"><a href="{% url 'shopease:product_detail' related.id %}">{{ related.name }}</a></h3>
+                                <h4 class="product-price">${{ related.variants.first.price }}</h4>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="add-to-cart-btn">
+                                    <i class="fa fa-shopping-cart"></i> add to cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /product -->
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Related Products -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add your JavaScript for image gallery, quantity controls, etc.
+</script>
+{% endblock %}

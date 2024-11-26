@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>My Wishlist</h2>
+    
+    {% if wishlist_items %}
+        <div class="row">
+            {% for item in wishlist_items %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.name }}</h5>
+                            <p class="card-text">${{ item.product.price }}</p>
+                            <a href="{% url 'shopease:product_detail' item.product.id %}" class="btn btn-primary">View Product</a>
+                            <form method="post" action="{% url 'shopease:remove_from_wishlist' item.product.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

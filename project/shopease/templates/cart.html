@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">Shopping Cart</h3>
+                </div>
+            </div>
+
+            {% if cart_items %}
+            <!-- Cart Items -->
+            <div class="col-md-8">
+                <div class="cart-list">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            <img src="{{ item.variant.product.image.url }}" alt="">
+                                        </div>
+                                        <div class="product-body">
+                                            <h3 class="product-name">
+                                                <a href="{% url 'shopease:product_detail' item.variant.product.id %}">
+                                                    {{ item.variant.product.name }}
+                                                </a>
+                                            </h3>
+                                            <p class="product-variant">{{ item.variant.name }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${{ item.variant.price }}</td>
+                                <td>
+                                    <div class="input-number">
+                                        <input type="number" value="{{ item.quantity }}" min="1"
+                                               onchange="updateQuantity({{ item.id }}, this.value)">
+                                        <span class="qty-up">+</span>
+                                        <span class="qty-down">-</span>
+                                    </div>
+                                </td>
+                                <td>${{ item.get_total }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'shopease:remove_from_cart' item.id %}"
+                                          style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="delete"><i class="fa fa-close"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /Cart Items -->
+
+            <!-- Cart Summary -->
+            <div class="col-md-4">
+                <div class="cart-summary">
+                    <h3>Cart Total</h3>
+                    <div class="cart-total">
+                        <p>
+                            <strong>Subtotal:</strong>
+                            <span>${{ total }}</span>
+                        </p>
+                        <p>
+                            <strong>Shipping:</strong>
+                            <span>FREE</span>
+                        </p>
+                        <h3>
+                            <strong>TOTAL:</strong>
+                            <span>${{ total }}</span>
+                        </h3>
+                    </div>
+                    <a href="{% url 'shopease:checkout' %}" class="primary-btn">Proceed to Checkout</a>
+                </div>
+            </div>
+            <!-- /Cart Summary -->
+            {% else %}
+            <!-- Empty Cart -->
+            <div class="col-md-12 text-center">
+                <h3>Your cart is empty</h3>
+                <p>Browse our products and add items to your cart.</p>
+                <a href="{% url 'shopease:product_list' %}" class="primary-btn">Continue Shopping</a>
+            </div>
+            <!-- /Empty Cart -->
+            {% endif %}
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- Add this JavaScript at the bottom of the template -->
+<script>
+function updateQuantity(itemId, quantity) {
+    fetch(`/cart/update/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: JSON.stringify({
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error updating quantity');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating quantity');
+    });
+}
+</script>
+{% endblock %}

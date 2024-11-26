@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2>Thank You for Your Order!</h2>
+                <p>Your order has been successfully placed.</p>
+                <p>We'll send you an email confirmation shortly.</p>
+                <a href="{% url 'shopease:home' %}" class="primary-btn">Continue Shopping</a>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

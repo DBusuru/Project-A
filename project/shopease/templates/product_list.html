@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Categories</h3>
+                    <div class="checkbox-filter">
+                        {% for category in categories %}
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="category-{{ category.id }}"
+                                   {% if category.category_name == selected_category %}checked{% endif %}
+                                   onchange="updateFilters('category', '{{ category.category_name }}')">
+                            <label for="category-{{ category.id }}">
+                                <span></span>
+                                {{ category.category_name }}
+                                <small>({{ category.product_set.count }})</small>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- /aside Widget -->
+
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Brand</h3>
+                    <div class="checkbox-filter">
+                        {% for brand in brands %}
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="brand-{{ brand.id }}"
+                                   {% if brand.name == selected_brand %}checked{% endif %}
+                                   onchange="updateFilters('brand', '{{ brand.name }}')">
+                            <label for="brand-{{ brand.id }}">
+                                <span></span>
+                                {{ brand.name }}
+                                <small>({{ brand.product_set.count }})</small>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- /aside Widget -->
+
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Price</h3>
+                    <div class="price-filter">
+                        <div id="price-slider"></div>
+                        <div class="input-number price-min">
+                            <input id="price-min" type="number" value="{{ price_min|default:0 }}">
+                            <span class="qty-up">+</span>
+                            <span class="qty-down">-</span>
+                        </div>
+                        <span>-</span>
+                        <div class="input-number price-max">
+                            <input id="price-max" type="number" value="{{ price_max|default:9999 }}">
+                            <span class="qty-up">+</span>
+                            <span class="qty-down">-</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /aside Widget -->
+            </div>
+            <!-- /ASIDE -->
+
+            <!-- STORE -->
+            <div id="store" class="col-md-9">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <label>
+                            Sort By:
+                            <select class="input-select" onchange="updateFilters('sort', this.value)">
+                                <option value="">Default</option>
+                                <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Price Low to High</option>
+                                <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price High to Low</option>
+                                <option value="name_asc" {% if selected_sort == 'name_asc' %}selected{% endif %}>Name A-Z</option>
+                                <option value="name_desc" {% if selected_sort == 'name_desc' %}selected{% endif %}>Name Z-A</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <!-- /store top filter -->
+
+                <!-- store products -->
+                <div class="row">
+                    {% for product in products %}
+                    <!-- product -->
+                    <div class="col-md-4 col-xs-6">
+                        <div class="product">
+                            <div class="product-img">
+                                <img src="{{ product.image.url }}" alt="">
+                                {% if product.discount %}
+                                <div class="product-label">
+                                    <span class="sale">-{{ product.discount }}%</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.category_name }}</p>
+                                <h3 class="product-name"><a href="{% url 'shopease:product_detail' product.id %}">{{ product.name }}</a></h3>
+                                <h4 class="product-price">
+                                    ${{ product.variants.first.price }}
+                                    {% if product.discount %}
+                                    <del class="product-old-price">${{ product.original_price }}</del>
+                                    {% endif %}
+                                </h4>
+                                <div class="product-rating">
+                                    <!-- Add rating stars here -->
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /product -->
+                    {% endfor %}
+                </div>
+                <!-- /store products -->
+
+                <!-- store bottom filter -->
+                <div class="store-filter clearfix">
+                    {% include 'pagination.html' with page_obj=products %}
+                </div>
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /STORE -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<!-- Add this JavaScript at the bottom of the template -->
+<script>
+function updateFilters(param, value) {
+    let currentUrl = new URL(window.location.href);
+    let params = new URLSearchParams(currentUrl.search);
+    
+    if (param === 'category' || param === 'brand') {
+        // Handle checkbox toggles
+        if (params.get(param) === value) {
+            params.delete(param);
+        } else {
+            params.set(param, value);
+        }
+    } else {
+        // Handle other filters
+        if (value) {
+            params.set(param, value);
+        } else {
+            params.delete(param);
+        }
+    }
+    
+    // Update URL and reload page
+    currentUrl.search = params.toString();
+    window.location.href = currentUrl.toString();
+}
+
+// Handle price filter
+document.getElementById('price-min').addEventListener('change', function() {
+    updateFilters('price_min', this.value);
+});
+
+document.getElementById('price-max').addEventListener('change', function() {
+    updateFilters('price_max', this.value);
+});
+</script>
+{% endblock %}
