@@ -2226,4 +2226,44 @@ textarea.input {
   width: 100%;
   margin-bottom: 15px;
 }
+.payment-plan {
+  border: 1px solid #E4E7ED;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.installment-schedule {
+  margin: 20px 0;
+}
+
+.security-icons i {
+  margin: 0 10px;
+  color: #28a745;
+}
+
+.terms-conditions {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.terms-conditions ul {
+  padding-left: 20px;
+}
+
+.payment-form .input {
+  margin-bottom: 15px;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.payment-security {
+  border-top: 1px solid #E4E7ED;
+  padding-top: 20px;
+}
 

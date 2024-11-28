@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Installment Plan Setup</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="order-summary mb-4">
+                            <h4>Order Summary</h4>
+                            <p>Total Amount: ${{ order.total_amount }}</p>
+                            <p>Monthly Payment: ${{ monthly_amount|floatformat:2 }}</p>
+                        </div>
+
+                        <div class="installment-schedule">
+                            <h4>Payment Schedule</h4>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Installment</th>
+                                            <th>Amount</th>
+                                            <th>Due Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for plan in payment_plans %}
+                                        <tr>
+                                            <td>Installment {{ plan.installment_number }}</td>
+                                            <td>${{ plan.amount|floatformat:2 }}</td>
+                                            <td>{{ plan.due_date|date:"F j, Y" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="terms-conditions mt-4">
+                            <h4>Terms & Conditions</h4>
+                            <ul>
+                                <li>Products will be delivered after completion of all payments</li>
+                                <li>Missing a payment may result in order cancellation</li>
+                                <li>In case of default, an equivalent product worth the paid amount will be provided</li>
+                            </ul>
+                        </div>
+
+                        <form action="{% url 'shopease:payment_processing' order.id %}" method="POST" class="mt-4">
+                            {% csrf_token %}
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the terms and conditions
+                                </label>
+                            </div>
+                            <button type="submit" class="primary-btn">
+                                Pay First Installment (${{ monthly_amount|floatformat:2 }})
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

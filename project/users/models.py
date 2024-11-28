@@ -3,7 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/', 
+        null=True, 
+        blank=True,
+        default='profile_pics/default.png'
+    )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
+    address = models.TextField(blank=True, null=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

@@ -1,0 +1,42 @@
+{% extends 'emails/base_email.html' %}
+
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center;">
+        <h2>Payment Failed</h2>
+    </div>
+    
+    <div style="padding: 20px; background-color: #fff;">
+        <p>Hello {{ order.user.first_name }},</p>
+        
+        <p>We were unable to process your payment for order #{{ order.id }}.</p>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0;">
+            <h3 style="margin-top: 0;">Payment Details:</h3>
+            <p>Amount: KES {{ amount|floatformat:2 }}</p>
+            <p>Date: {{ attempt_date|date:"F j, Y H:i" }}</p>
+            <p>Reason: {{ failure_reason }}</p>
+        </div>
+        
+        <div style="background-color: #fff3cd; padding: 15px; margin: 20px 0;">
+            <h3 style="margin-top: 0;">What to do next:</h3>
+            <ul style="padding-left: 20px;">
+                <li>Check if you have sufficient funds in your M-Pesa account</li>
+                <li>Verify your M-Pesa PIN</li>
+                <li>Try the payment again</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ retry_url }}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                Retry Payment
+            </a>
+        </div>
+    </div>
+    
+    <div style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px;">
+        <p>Need help? Contact our support team.</p>
+        <p>Thank you for choosing ShopEase!</p>
+    </div>
+</div>
+{% endblock %}
