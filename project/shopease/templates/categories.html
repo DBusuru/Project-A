@@ -1,75 +1,214 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
+<!-- SECTION -->
 <div class="section">
+    <!-- container -->
     <div class="container">
+        <!-- row -->
         <div class="row">
-            <!-- Category Sidebar -->
+            <!-- ASIDE -->
             <div id="aside" class="col-md-3">
                 <div class="aside">
                     <h3 class="aside-title">Categories</h3>
-                    <div class="checkbox-filter">
-                        {% for cat in categories %}
-                        <div class="input-checkbox">
-                            <a href="{% url 'shopease:category' cat.id %}" 
-                               class="{% if cat.id == category.id %}active{% endif %}">
-                                {{ cat.name }}
+                    <div class="category-list">
+                        {% for category in categories %}
+                        <div class="category-item {% if selected_category.id == category.id %}active{% endif %}">
+                            <a href="?category={{ category.id }}">
+                                {{ category.category_name }}
+                                <span class="badge">{{ category.product_set.count }}</span>
                             </a>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
+            <!-- /ASIDE -->
 
-            <!-- Products Grid -->
+            <!-- STORE -->
             <div id="store" class="col-md-9">
+                {% if selected_category %}
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <h3>
+                            {{ selected_category.category_name }}
+                            <small>({{ products.paginator.count }} products)</small>
+                        </h3>
+                        <form method="get" class="sort-form">
+                            <input type="hidden" name="category" value="{{ selected_category.id }}">
+                            <select name="sort" class="input-select" onchange="this.form.submit()">
+                                <option value="">Sort By</option>
+                                <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>
+                                    Price: Low to High
+                                </option>
+                                <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>
+                                    Price: High to Low
+                                </option>
+                                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>
+                                    Newest First
+                                </option>
+                                <option value="name_asc" {% if selected_sort == 'name_asc' %}selected{% endif %}>
+                                    Name: A to Z
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <!-- /store top filter -->
+
+                <!-- store products -->
                 <div class="row">
                     {% for product in products %}
+                    <!-- product -->
                     <div class="col-md-4 col-xs-6">
                         <div class="product">
                             <div class="product-img">
-                                {% if product.image %}
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% if product.discount %}
+                                <div class="product-label">
+                                    <span class="sale">-{{ product.discount }}%</span>
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="product-body">
-                                <p class="product-category">{{ product.category.name }}</p>
+                                <p class="product-category">{{ product.category.category_name }}</p>
                                 <h3 class="product-name">
                                     <a href="{% url 'shopease:product_detail' product.id %}">{{ product.name }}</a>
                                 </h3>
-                                <h4 class="product-price">${{ product.price }}</h4>
+                                <h4 class="product-price">
+                                    ${{ product.variants.first.price }}
+                                    {% if product.discount %}
+                                    <del class="product-old-price">${{ product.original_price }}</del>
+                                    {% endif %}
+                                </h4>
+                                <div class="product-rating">
+                                    {% for i in "12345"|make_list %}
+                                    <i class="fa fa-star{% if forloop.counter > product.average_rating %}-o empty{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
                             </div>
                             <div class="add-to-cart">
                                 <a href="{% url 'shopease:product_detail' product.id %}" class="add-to-cart-btn">
-                                    View Details
+                                    <i class="fa fa-shopping-cart"></i> View Details
                                 </a>
                             </div>
                         </div>
                     </div>
+                    <!-- /product -->
+                    {% empty %}
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            No products available in this category.
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
+                <!-- /store products -->
 
-                <!-- Pagination -->
+                <!-- store bottom filter -->
+                {% if products.has_other_pages %}
                 <div class="store-filter clearfix">
                     <ul class="store-pagination">
                         {% if products.has_previous %}
-                        <li><a href="?page={{ products.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                        <li>
+                            <a href="?category={{ selected_category.id }}&page={{ products.previous_page_number }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        </li>
                         {% endif %}
-
+                        
                         {% for num in products.paginator.page_range %}
                         <li {% if products.number == num %}class="active"{% endif %}>
-                            <a href="?page={{ num }}">{{ num }}</a>
+                            <a href="?category={{ selected_category.id }}&page={{ num }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">
+                                {{ num }}
+                            </a>
                         </li>
                         {% endfor %}
-
+                        
                         {% if products.has_next %}
-                        <li><a href="?page={{ products.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                        <li>
+                            <a href="?category={{ selected_category.id }}&page={{ products.next_page_number }}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
+                {% endif %}
+                <!-- /store bottom filter -->
+                {% else %}
+                <!-- No category selected -->
+                <div class="col-md-12">
+                    <div class="welcome-message">
+                        <h3>Welcome to Our Categories</h3>
+                        <p>Please select a category from the left to view products.</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
+            <!-- /STORE -->
         </div>
+        <!-- /row -->
     </div>
+    <!-- /container -->
 </div>
+<!-- /SECTION -->
+
+<style>
+.category-list {
+    margin-bottom: 30px;
+}
+
+.category-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #E4E7ED;
+}
+
+.category-item:last-child {
+    border-bottom: none;
+}
+
+.category-item.active {
+    background-color: #D10024;
+}
+
+.category-item.active a {
+    color: #FFF;
+}
+
+.category-item a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #2B2D42;
+    text-decoration: none;
+}
+
+.category-item:hover {
+    background-color: #E4E7ED;
+}
+
+.category-item.active:hover {
+    background-color: #D10024;
+}
+
+.badge {
+    background-color: #2B2D42;
+    color: #FFF;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.welcome-message {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.sort-form {
+    display: inline-block;
+    margin-left: 15px;
+}
+</style>
 {% endblock %}

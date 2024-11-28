@@ -25,8 +25,3 @@ class LoginForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Enter your password'
     }))
-
-class ProfilePictureForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ['profile_picture']

@@ -59,7 +59,6 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'users/templates',
             BASE_DIR / 'shopease/templates',
-            BASE_DIR / 'shopping_cart/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -179,12 +178,6 @@ else:
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = 'your-email@gmail.com'
     EMAIL_HOST_PASSWORD = 'your-app-password'
-    DEFAULT_FROM_EMAIL = 'ShopEase <noreply@shopease.com>'
-
-# Africa's Talking Settings (for SMS)
-AT_USERNAME = 'David Busuru'
-AT_API_KEY = 'atsk_e4f09ef9d36e11e249187a48fc603e8e487454e73d4becc37728690131e345a03b838800'
-
 
 # Django-allauth settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Change to 'none' for development
@@ -195,12 +188,4 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
-
-# M-Pesa Configuration
-MPESA_ENVIRONMENT = 'sandbox'  # 'sandbox' or 'production'
-MPESA_CONSUMER_KEY = 'your_consumer_key'
-MPESA_CONSUMER_SECRET = 'your_consumer_secret'
-MPESA_SHORTCODE = 'your_shortcode'
-MPESA_PASSKEY = 'your_passkey'
-BASE_URL = 'https://your-domain.com'  # Your callback URL domain
 

@@ -94,31 +94,12 @@
                         </div>
                     </form>
 
-                    <div class="add-to-wishlist">
-                        <button class="btn wishlist-btn" 
-                                data-product-id="{{ product.id }}"
-                                data-url="{% url 'shopease:add_to_wishlist' product.id %}">
-                            <i class="fa fa-heart{% if product in request.user.wishlist_set.all %} text-danger{% endif %}"></i>
-                            <span class="wishlist-text">
-                                {% if product in request.user.wishlist_set.all %}
-                                    Remove from Wishlist
-                                {% else %}
-                                    Add to Wishlist
-                                {% endif %}
-                            </span>
-                        </button>
-                    </div>
-
                     <ul class="product-btns">
                         <li>
-                            <button id="wishlistBtn" class="btn btn-outline-secondary" 
-                                    data-product-id="{{ product.id }}"
-                                    {% if product in user.wishlist_set.all %}data-in-wishlist="true"{% endif %}>
-                                {% if product in user.wishlist_set.all %}
-                                    Remove from Wishlist
-                                {% else %}
-                                    Add to Wishlist
-                                {% endif %}
+                            <button onclick="toggleWishlist({{ product.id }})" class="wishlist-btn">
+                                <i class="fa {% if in_wishlist %}fa-heart{% else %}fa-heart-o{% endif %}"
+                                   id="wishlist-icon-{{ product.id }}"></i>
+                                add to wishlist
                             </button>
                         </li>
                     </ul>
@@ -263,61 +244,5 @@
 {% block extra_js %}
 <script>
 // Add your JavaScript for image gallery, quantity controls, etc.
-
-document.querySelectorAll('.wishlist-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        const productId = this.dataset.productId;
-        const url = this.dataset.url;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Update the heart icon
-            const heartIcon = this.querySelector('i');
-            const wishlistText = this.querySelector('.wishlist-text');
-            
-            if (data.is_in_wishlist) {
-                heartIcon.classList.add('text-danger');
-                wishlistText.textContent = 'Remove from Wishlist';
-            } else {
-                heartIcon.classList.remove('text-danger');
-                wishlistText.textContent = 'Add to Wishlist';
-            }
-            
-            // Show message using SweetAlert2
-            Swal.fire({
-                text: data.message,
-                icon: 'success',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                text: 'An error occurred. Please try again.',
-                icon: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        });
-    });
-});
 </script>
-
-<!-- Optional: Add SweetAlert2 for better-looking alerts -->
-<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-minimal@4/minimal.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% endblock %}
