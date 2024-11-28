@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a96a5a02-fff5-43a5-94f6-0f78a10ff327" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Project A/Concept Paper.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Project A/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/project/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/context_processors.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/context_processors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templates/accessories.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templates/accessories.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templates/cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templates/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templates/checkout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templates/product_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templates/product_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/templatetags/custom_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/templatetags/custom_filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopease/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopease/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopping_cart/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/shopping_cart/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shopping_cart/templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/shopping_cart/templates/cart.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;DBusuru&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/DBusuru/Project-A.git&quot;,
+    &quot;accountId&quot;: &quot;3f7d6ca6-20c3-4ae7-8983-87ed723d8a94&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2pTCUODxh6mq3m6F7CbRGjjYOZo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Django Server.project.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "django.template.preview.state": "SHOW_EDITOR",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="project" type="Python.DjangoServer" factoryName="Django server">
+      <module name="project" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="project.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="localhost" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
+        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a96a5a02-fff5-43a5-94f6-0f78a10ff327" name="Changes" comment="" />
+      <created>1732780710101</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732780710101</updated>
+      <workItem from="1732780715118" duration="5598000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
