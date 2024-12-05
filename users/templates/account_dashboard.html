@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Account Dashboard</h2>
+    
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Orders</h5>
+                    <p class="card-text display-4">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Active Installments</h5>
+                    <p class="card-text display-4">{{ active_installments }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Pending Amount</h5>
+                    <p class="card-text display-4">KES {{ total_pending_amount|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_orders %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>KES {{ order.total_amount|floatformat:2 }}</td>
+                                        <td>{{ order.status }}</td>
+                                        <td>
+                                            <a href="{% url 'shopease:order_detail' order.id %}" class="btn btn-sm btn-info">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>No recent orders found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Installment Plans -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Active Installment Plans</h5>
+                </div>
+                <div class="card-body">
+                    {% if active_installment_plans %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Total Amount</th>
+                                        <th>Amount Paid</th>
+                                        <th>Remaining</th>
+                                        <th>Payment Frequency</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan_data in active_installment_plans %}
+                                    <tr>
+                                        <td>#{{ plan_data.plan.order.id }}</td>
+                                        <td>KES {{ plan_data.plan.total_amount|floatformat:2 }}</td>
+                                        <td>KES {{ plan_data.plan.amount_paid|floatformat:2 }}</td>
+                                        <td>KES {{ plan_data.remaining_balance|floatformat:2 }}</td>
+                                        <td>{{ plan_data.plan.payment_frequency }}</td>
+                                        <td>
+                                            <a href="{% url 'shopease:installment_detail' plan_data.plan.id %}" class="btn btn-sm btn-info">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>No active installment plans found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,445 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+    {% block title %}Home{% endblock %}
+
+    {% block content %}
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- shop -->
+					<div class="col-md-4 col-xs-6">
+						<div class="shop">
+							<div class="shop-img">
+								<img src="{% static 'img/shop01.png' %}" alt="" style="height: 240px; width: 100%; object-fit: cover;">
+							</div>
+							<div class="shop-body">
+								<h3>Laptop<br>Collection</h3>
+								<a href="{% url 'shopease:laptops' %}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<!-- /shop -->
+
+					<!-- shop -->
+					<div class="col-md-4 col-xs-6">
+						<div class="shop">
+							<div class="shop-img">
+								<img src="{% static 'img/shop03.png' %}" alt="" style="height: 240px; width: 100%; object-fit: cover;">
+							</div>
+							<div class="shop-body">
+								<h3>Accessories<br>Collection</h3>
+								<a href="{% url 'shopease:accessories' %}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<!-- /shop -->
+
+					<!-- shop -->
+					<div class="col-md-4 col-xs-6">
+						<div class="shop">
+							<div class="shop-img">
+								<img src="{% static 'img/samsung.jpg' %}" alt="" style="height: 240px; width: 100%; object-fit: cover;">
+							</div>
+							<div class="shop-body">
+								<h3>Smartphones<br>Collection</h3>
+								<a href="{% url 'shopease:smartphones' %}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<!-- /shop -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+					<!-- section title -->
+					<div class="col-md-12">
+						<div class="section-title">
+							<h3 class="title">New Products</h3>
+						</div>
+					</div>
+					<!-- /section title -->
+
+					<!-- Products tab & slick -->
+					<div class="col-md-12">
+						<div class="row">
+							<div class="products-tabs">
+								<!-- All Products -->
+								<div id="all" class="tab-pane active">
+									<div class="products-slick" data-nav="#slick-nav-1">
+										{% for product in new_products %}
+										<div class="product">
+											<div class="product-img">
+												{% if product.image %}
+													<img src="{{ product.image.url }}" alt="{{ product.name }}">
+												{% endif %}
+												{% if product.discount %}
+												<div class="product-label">
+													<span class="sale">-{{ product.discount }}%</span>
+												</div>
+												{% endif %}
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{ product.category.name }}</p>
+												<h3 class="product-name">
+													<a href="{% url 'shopease:product_detail' product.id %}">{{ product.name }}</a>
+												</h3>
+												<h4 class="product-price">
+													KES {{ product.price|floatformat:2 }}
+													{% if product.old_price %}
+														<del class="product-old-price">KES {{ product.old_price|floatformat:2 }}</del>
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													{% for i in "12345"|make_list %}
+														<i class="fa fa-star{% if forloop.counter > product.rating|default:0 %}-o{% endif %}"></i>
+													{% endfor %}
+												</div>
+											</div>
+											<div class="add-to-cart">
+												<form method="POST" action="{% url 'shopease:add_to_cart' product.id %}">
+													{% csrf_token %}
+													<input type="hidden" name="quantity" value="1">
+													<button type="submit" class="add-to-cart-btn">
+														<i class="fa fa-shopping-cart"></i> Add to Cart
+													</button>
+												</form>
+											</div>
+										</div>
+										{% endfor %}
+									</div>
+									<div id="slick-nav-1" class="products-slick-nav"></div>
+								</div>
+								<!-- /All Products -->
+							</div>
+						</div>
+					</div>
+					<!-- /Products tab & slick -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- HOT DEAL SECTION -->
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="hot-deal">
+							<ul class="hot-deal-countdown">
+								<li>
+									<div>
+										<h3>02</h3>
+										<span>Days</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>10</h3>
+										<span>Hours</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>34</h3>
+										<span>Mins</span>
+									</div>
+								</li>
+								<li>
+									<div>
+										<h3>60</h3>
+										<span>Secs</span>
+									</div>
+								</li>
+							</ul>
+							<h2 class="text-uppercase">hot deal this week</h2>
+							<p>New Collection Up to 50% OFF</p>
+							<a class="primary-btn cta-btn" href="{% url 'shopease:hot_deals' %}">Shop now</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /HOT DEAL SECTION -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+					<!-- section title -->
+					<div class="col-md-12">
+						<div class="section-title">
+							<h3 class="title">Top Selling</h3>
+						</div>
+					</div>
+					<!-- /section title -->
+
+					<!-- Products tab & slick -->
+					<div class="col-md-12">
+						<div class="row">
+							<div class="products-tabs">
+								<!-- All Products -->
+								<div id="top-selling" class="tab-pane active">
+									<div class="products-slick" data-nav="#slick-nav-2">
+										{% for product in top_selling %}
+										<div class="product">
+											<div class="product-img">
+												{% if product.image %}
+													<img src="{{ product.image.url }}" alt="{{ product.name }}">
+												{% endif %}
+												{% if product.discount %}
+												<div class="product-label">
+													<span class="sale">-{{ product.discount }}%</span>
+												</div>
+												{% endif %}
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{ product.category.name }}</p>
+												<h3 class="product-name">
+													<a href="{% url 'shopease:product_detail' product.id %}">{{ product.name }}</a>
+												</h3>
+												<h4 class="product-price">
+													KES {{ product.price|floatformat:2 }}
+													{% if product.old_price %}
+														<del class="product-old-price">KES {{ product.old_price|floatformat:2 }}</del>
+													{% endif %}
+												</h4>
+												<div class="product-rating">
+													{% for i in "12345"|make_list %}
+														<i class="fa fa-star{% if forloop.counter > product.rating|default:0 %}-o{% endif %}"></i>
+													{% endfor %}
+												</div>
+											</div>
+											<div class="add-to-cart">
+												<form method="POST" action="{% url 'shopease:add_to_cart' product.id %}">
+													{% csrf_token %}
+													<input type="hidden" name="quantity" value="1">
+													<button type="submit" class="add-to-cart-btn">
+														<i class="fa fa-shopping-cart"></i> Add to Cart
+													</button>
+												</form>
+											</div>
+										</div>
+										{% endfor %}
+									</div>
+									<div id="slick-nav-2" class="products-slick-nav"></div>
+								</div>
+								<!-- /All Products -->
+							</div>
+						</div>
+					</div>
+					<!-- /Products tab & slick -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<style>
+			/* General Styles */
+			body {
+				font-family: 'Arial', sans-serif;
+				color: #333;
+				line-height: 1.6;
+			}
+
+			/* Product Card Styling */
+			.product {
+				margin: 15px;
+				background: #fff;
+				border-radius: 8px;
+				box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+				transition: box-shadow 0.3s ease;
+			}
+			
+			.product:hover {
+				box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+			}
+			
+			.product-img {
+				position: relative;
+				border-radius: 8px 8px 0 0;
+				overflow: hidden;
+				height: 300px;
+				background: #f8f8f8;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.product-img img {
+				max-width: 100%;
+				max-height: 280px;
+				object-fit: contain;
+				margin: auto;
+				display: block;
+			}
+			
+			.product-body {
+				padding: 15px;
+			}
+			
+			.product-name {
+				font-size: 18px;
+				font-weight: bold;
+				margin: 10px 0;
+			}
+			
+			.product-name a {
+				color: #2B2D42;
+				text-decoration: none;
+			}
+			
+			.product-price {
+				color: #D10024;
+				font-size: 16px;
+				font-weight: bold;
+			}
+			
+			.product-rating {
+				margin: 10px 0;
+			}
+			
+			.product-btns {
+				margin-top: 10px;
+				display: flex;
+				justify-content: space-between;
+			}
+			
+			.add-to-cart-btn {
+				background: #2B2D42;
+				color: #fff;
+				padding: 10px;
+				border-radius: 4px;
+				text-align: center;
+				transition: background 0.3s ease;
+			}
+			
+			.add-to-cart-btn:hover {
+				background: #3B3D52;
+			}
+			
+			/* Section Title Styling */
+			.section-title {
+				margin-bottom: 30px;
+				padding-bottom: 15px;
+				border-bottom: 2px solid #e4e7ed;
+			}
+			
+			.section-title .title {
+				display: inline-block;
+				position: relative;
+				margin: 0;
+				font-size: 24px;
+				font-weight: bold;
+			}
+			
+			.section-title .title::after {
+				content: '';
+				position: absolute;
+				bottom: -5px;
+				left: 0;
+				width: 50px;
+				height: 3px;
+				background: #D10024;
+			}
+			
+			/* Tab Navigation Styling */
+			.section-tab-nav li a {
+				padding: 8px 15px;
+				border-radius: 4px;
+				transition: background 0.2s;
+			}
+			
+			.section-tab-nav li.active a {
+				background: #D10024;
+				color: #fff;
+			}
+
+			/* Newsletter Section Styling */
+			#newsletter {
+				background: #f8f8f8; /* Light background color */
+				padding: 40px 0;
+				text-align: center;
+			}
+
+			#newsletter .newsletter {
+				max-width: 600px;
+				margin: 0 auto;
+			}
+
+			#newsletter p {
+				font-size: 20px;
+				margin-bottom: 20px;
+			}
+
+			#newsletter .input {
+				width: 70%;
+				padding: 10px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				margin-right: 10px;
+			}
+
+			#newsletter .newsletter-btn {
+				background: #D10024;
+				color: #fff;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: background 0.3s ease;
+			}
+
+			#newsletter .newsletter-btn:hover {
+				background: #A70012;
+			}
+
+			#newsletter .newsletter-follow {
+				margin-top: 20px;
+			}
+
+			#newsletter .newsletter-follow li {
+				display: inline-block;
+				margin: 0 10px;
+			}
+
+			#newsletter .newsletter-follow a {
+				color: #333;
+				font-size: 24px;
+				transition: color 0.3s ease;
+			}
+
+			#newsletter .newsletter-follow a:hover {
+				color: #D10024;
+			}
+
+			#newsletter .newsletter-follow a i {
+				border: 1px solid red; /* Temporary border to check visibility */
+			}
+		</style>
+
+		
+
+{% endblock %}

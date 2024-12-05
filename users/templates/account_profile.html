@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Account Menu</h5>
+                    <div class="list-group">
+                        <a href="{% url 'users:account_dashboard' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-dashboard"></i> Dashboard
+                        </a>
+                        <a href="{% url 'users:account_orders' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-shopping-bag"></i> My Orders
+                        </a>
+                        <a href="{% url 'users:account_installments' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-clock-o"></i> Installments
+                        </a>
+                        <a href="{% url 'users:account_profile' %}" class="list-group-item list-group-item-action active">
+                            <i class="fa fa-user"></i> Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Profile Information</h2>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-center">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" 
+                                     class="profile-picture rounded-circle mb-3">
+                            {% else %}
+                                <img src="/static/images/default-profile.png" alt="Default Profile" 
+                                     class="profile-picture rounded-circle mb-3">
+                            {% endif %}
+                            <button type="button" class="btn btn-sm btn-outline-primary" 
+                                    onclick="document.getElementById('profile_picture_input').click()">
+                                <i class="fa fa-camera"></i> Change Photo
+                            </button>
+                        </div>
+                        <div class="col-md-9">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="file" id="profile_picture_input" name="profile_picture" 
+                                       accept="image/*" style="display: none;" 
+                                       onchange="document.getElementById('upload_indicator').style.display='inline'">
+                                <span id="upload_indicator" style="display: none;" class="text-muted">
+                                    <i class="fa fa-check"></i> Photo selected - Save changes to update
+                                </span>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="first_name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" 
+                                               value="{{ user.first_name }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="last_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" 
+                                               value="{{ user.last_name }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" value="{{ user.email }}" readonly>
+                                    <small class="text-muted">Email cannot be changed</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="phone_number" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                           value="{{ user.phone_number }}" required>
+                                    <small class="text-muted">Format: +254XXXXXXXXX</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Delivery Address</label>
+                                    <textarea class="form-control" id="address" name="address" 
+                                              rows="3">{{ user.address }}</textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h3 class="mb-3">Change Password</h3>
+                    <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary">
+                        <i class="fa fa-lock"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:read-only {
+        background-color: #f8f9fa;
+    }
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    .text-muted {
+        font-size: 0.875rem;
+    }
+    .alert {
+        margin-bottom: 1.5rem;
+    }
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 2px solid #eee;
+    }
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}

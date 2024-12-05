@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="thank-you-content">
+                    <i class="fa fa-check-circle success-icon"></i>
+                    <h1>Thank You for Your Order!</h1>
+                    <p>Your order has been successfully placed and is being processed.</p>
+                    
+                    {% if order %}
+                    <div class="order-details">
+                        <h3>Order Details</h3>
+                        <p>Order Number: #{{ order.id }}</p>
+                        <p>Date: {{ order.created_at|date:"F j, Y" }}</p>
+                        <p>Total Amount: ${{ order.total_amount }}</p>
+                        
+                        <div class="order-items">
+                            <h4>Items Ordered:</h4>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.orderitem_set.all %}
+                                    <tr>
+                                        <td>
+                                            {{ item.product.name }}
+                                            {% if item.variant %}
+                                            <br>
+                                            <small>{{ item.variant.name }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>${{ item.price }}</td>
+                                        <td>${{ item.get_total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="shipping-details">
+                            <h4>Shipping Details:</h4>
+                            <p>{{ order.first_name }} {{ order.last_name }}</p>
+                            <p>{{ order.address }}</p>
+                            <p>{{ order.city }}, {{ order.postal_code }}</p>
+                            <p>{{ order.country }}</p>
+                            <p>Phone: {{ order.phone }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="next-steps">
+                        <p>We'll send you an email confirmation shortly with your order details.</p>
+                        <div class="buttons">
+                            <a href="{% url 'shopease:home' %}" class="primary-btn">Continue Shopping</a>
+                            {% if order %}
+                            <a href="#" onclick="window.print()" class="secondary-btn">Print Order</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+<style>
+.thank-you-content {
+    padding: 50px 0;
+}
+
+.success-icon {
+    color: #28a745;
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.order-details {
+    max-width: 800px;
+    margin: 30px auto;
+    text-align: left;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.order-items {
+    margin: 30px 0;
+}
+
+.shipping-details {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+.next-steps {
+    margin-top: 30px;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.buttons a {
+    margin: 0 10px;
+}
+
+.secondary-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #f4f4f4;
+    color: #333;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.secondary-btn:hover {
+    background: #e4e4e4;
+}
+
+@media print {
+    .header,
+    .footer,
+    .buttons {
+        display: none;
+    }
+    
+    .order-details {
+        border: none;
+    }
+}
+</style>
+{% endblock %}

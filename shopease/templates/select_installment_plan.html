@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Select Installment Plan</h2>
+    
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Order Summary -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                        <span>Ksh {{ item.get_total|intcomma }}</span>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong>Ksh {{ total|intcomma }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Installment Plans -->
+        <div class="col-md-8">
+            <div class="row">
+                {% for plan in installment_options %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center">
+                            <h5 class="mb-0">{{ plan.months }} Months</h5>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div class="text-center mb-3">
+                                <h3 class="mb-0">Ksh {{ plan.monthly_payment|floatformat:2|intcomma }}</h3>
+                                <small class="text-muted">per month</small>
+                            </div>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">✓ No hidden fees</li>
+                                <li class="mb-2">✓ 0% interest</li>
+                                <li class="mb-2">✓ Flexible payments</li>
+                            </ul>
+                            <div class="mt-auto">
+                                <form method="post" action="{% url 'shopease:process_installment' %}" class="text-center">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="months" value="{{ plan.months }}">
+                                    <input type="hidden" name="monthly_payment" value="{{ plan.monthly_payment }}">
+                                    <button type="submit" class="btn btn-primary w-100">Select Plan</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <small class="text-muted">Total: Ksh {{ plan.total_amount|intcomma }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

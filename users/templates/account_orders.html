@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Account Menu</h5>
+                    <div class="list-group">
+                        <a href="{% url 'users:account_dashboard' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-dashboard"></i> Dashboard
+                        </a>
+                        <a href="{% url 'users:account_orders' %}" class="list-group-item list-group-item-action active">
+                            <i class="fa fa-shopping-bag"></i> My Orders
+                        </a>
+                        <a href="{% url 'users:account_installments' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-clock-o"></i> Installments
+                        </a>
+                        <a href="{% url 'users:account_profile' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-user"></i> Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">My Orders</h2>
+                    
+                    {% if orders %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Payment Method</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.created_at|date:"F j, Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if order.status == 'Completed' %}badge-success{% elif order.status == 'Pending' %}badge-warning{% else %}badge-secondary{% endif %}">
+                                                {{ order.status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ order.payment_method }}</td>
+                                        <td>KES {{ order.total_amount|floatformat:2 }}</td>
+                                        <td>
+                                            <a href="{% url 'shopease:order_detail' order.id %}" class="btn btn-sm btn-info">
+                                                <i class="fa fa-eye"></i> View
+                                            </a>
+                                            {% if order.status == 'Pending' %}
+                                            <a href="{% url 'shopease:make_payment' order.id %}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-credit-card"></i> Pay
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if orders.has_other_pages %}
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if orders.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ orders.previous_page_number }}">&laquo;</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in orders.paginator.page_range %}
+                                    {% if orders.number == i %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ i }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if orders.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ orders.next_page_number }}">&raquo;</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-shopping-bag fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No orders yet</h4>
+                            <p class="text-muted">Start shopping to see your orders here!</p>
+                            <a href="{% url 'shopease:product_list' %}" class="btn btn-primary">
+                                <i class="fa fa-shopping-cart"></i> Browse Products
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge {
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .btn-sm {
+        margin: 0 2px;
+    }
+</style>
+{% endblock %} 

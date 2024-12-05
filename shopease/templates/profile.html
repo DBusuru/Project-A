@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <div class="profile-header">
+            {% if user.profile_pic %}
+                <img src="{{ user.profile_pic.url }}" alt="Profile Picture" class="profile-image">
+            {% else %}
+                <div class="default-profile-image">
+                    <i class="fa fa-user"></i>
+                </div>
+            {% endif %}
+            <h2>{{ user.username }}'s Profile</h2>
+        </div>
+
+        <div class="profile-details">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Joined:</strong> {{ user.date_joined|date }}</p>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

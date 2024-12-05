@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center mb-0">Payment Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5>Installment {{ installment_number }} of {{ total_installments }}</h5>
+                        <p class="mb-0">Amount: Ksh {{ monthly_payment }}</p>
+                    </div>
+
+                    <form method="POST" action="{% url 'shopease:process_payment' %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="phone_number">M-PESA Phone Number</label>
+                            <input type="tel" 
+                                   class="form-control" 
+                                   id="phone_number" 
+                                   name="phone_number" 
+                                   placeholder="e.g., 254712345678"
+                                   pattern="254[0-9]{9}"
+                                   required>
+                            <small class="form-text text-muted">Enter your M-PESA number starting with 254</small>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Pay Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

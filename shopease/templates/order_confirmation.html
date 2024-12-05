@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title mb-4">Order Confirmation</h2>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <h4>Thank you for your order!</h4>
+                        <p>Your first installment payment has been initiated.</p>
+                    </div>
+                    
+                    <div class="order-details mt-4">
+                        <h5>Installment Plan Details</h5>
+                        <p><strong>Total Amount:</strong> Ksh {{ order_details.total_amount|floatformat:2|intcomma }}</p>
+                        <p><strong>Installment Period:</strong> {{ order_details.months }} months</p>
+                        <p><strong>Monthly Payment:</strong> Ksh {{ order_details.monthly_payment|floatformat:2|intcomma }}</p>
+                        <p><strong>Next Payment Date:</strong> {{ order_details.next_payment_date|date:"F j, Y" }}</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-muted">Please complete the M-Pesa payment on your phone.</p>
+                        <p class="text-muted">Your subsequent payments will be due on the same date each month.</p>
+                        <a href="{% url 'shopease:product_list' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

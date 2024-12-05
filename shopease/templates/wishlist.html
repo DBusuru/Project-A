@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>My Wishlist</h1>
+    
+    {% if wishlist_items %}
+        <div class="row">
+            {% for product in wishlist_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if product.images.exists %}
+                    <img src="{{ product.images.first.image.url }}" 
+                         class="card-img-top" 
+                         alt="{{ product.images.first.alt_text }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.short_description }}</p>
+                        <p class="card-text"><strong>${{ product.price }}</strong></p>
+                        <a href="{% url 'shopease:product_detail' product.id %}" class="btn btn-primary">View Details</a>
+                        <form action="{% url 'shopease:toggle_wishlist' product.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-heart"></i> Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}My Installments{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Account Menu</h5>
+                    <div class="list-group">
+                        <a href="{% url 'users:account_dashboard' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-dashboard"></i> Dashboard
+                        </a>
+                        <a href="{% url 'users:account_orders' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-shopping-bag"></i> My Orders
+                        </a>
+                        <a href="{% url 'users:account_installments' %}" class="list-group-item list-group-item-action active">
+                            <i class="fa fa-clock-o"></i> Installments
+                        </a>
+                        <a href="{% url 'users:account_profile' %}" class="list-group-item list-group-item-action">
+                            <i class="fa fa-user"></i> Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">My Installment Plans</h2>
+                    
+                    {% if installment_plans %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Total Amount</th>
+                                        <th>Amount Paid</th>
+                                        <th>Remaining</th>
+                                        <th>Next Payment</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan in installment_plans %}
+                                    <tr>
+                                        <td>#{{ plan.order.id }}</td>
+                                        <td>KES {{ plan.total_amount|floatformat:2 }}</td>
+                                        <td>KES {{ plan.amount_paid|floatformat:2 }}</td>
+                                        <td>KES {{ plan.remaining_amount|floatformat:2 }}</td>
+                                        <td>{{ plan.next_payment_date|date:"F j, Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if plan.is_completed %}badge-success{% else %}badge-warning{% endif %}">
+                                                {% if plan.is_completed %}Completed{% else %}Active{% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'shopease:installment_detail' plan.id %}" class="btn btn-sm btn-info">
+                                                <i class="fa fa-eye"></i> View
+                                            </a>
+                                            {% if not plan.is_completed %}
+                                            <a href="{% url 'shopease:make_installment_payment' plan.id %}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-credit-card"></i> Pay
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if installment_plans.has_other_pages %}
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if installment_plans.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ installment_plans.previous_page_number }}">&laquo;</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in installment_plans.paginator.page_range %}
+                                    {% if installment_plans.number == i %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ i }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if installment_plans.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ installment_plans.next_page_number }}">&raquo;</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-clock-o fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No installment plans yet</h4>
+                            <p class="text-muted">You haven't set up any installment plans yet.</p>
+                            <a href="{% url 'shopease:product_list' %}" class="btn btn-primary">
+                                <i class="fa fa-shopping-cart"></i> Shop Now
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge {
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .btn-sm {
+        margin: 0 2px;
+    }
+</style>
+{% endblock %}

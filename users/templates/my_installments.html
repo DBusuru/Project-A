@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .installments-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin: 2rem auto;
+        max-width: 1200px;
+    }
+
+    .installment-card {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .installment-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background-color: #ffd700;
+        color: #000;
+    }
+
+    .status-paid {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .status-overdue {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .installment-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .installment-amount {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .due-date {
+        color: #666;
+    }
+
+    .pay-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .pay-button:hover {
+        background-color: #0056b3;
+    }
+
+    .pay-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .installment-details {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="installments-container">
+    <h2 class="mb-4">My Installments</h2>
+
+    {% if installments %}
+        {% for installment in installments %}
+            <div class="installment-card">
+                <div class="installment-details">
+                    <div>
+                        <h3 class="mb-2">Order #{{ installment.order.id }}</h3>
+                        <p class="installment-amount">KES {{ installment.amount|floatformat:2 }}</p>
+                        <p class="due-date">Due: {{ installment.due_date|date:"F j, Y" }}</p>
+                    </div>
+                    
+                    <div class="text-end">
+                        <span class="status-badge status-{{ installment.payment_status|lower }}">
+                            {{ installment.payment_status }}
+                        </span>
+                        
+                        {% if installment.payment_status == 'PENDING' %}
+                            <div class="mt-2">
+                                <form action="{% url 'users:pay_installment' installment.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="pay-button">
+                                        Pay Now
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <h3>No Installments Found</h3>
+            <p>You don't have any active installment plans.</p>
+            <a href="{% url 'shopease:product_list' %}" class="btn btn-primary mt-3">
+                Continue Shopping
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-dismiss alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const closeButton = alert.querySelector('.btn-close');
+                if (closeButton) {
+                    closeButton.click();
+                }
+            });
+        }, 5000);
+    });
+</script>
+{% endblock %} 

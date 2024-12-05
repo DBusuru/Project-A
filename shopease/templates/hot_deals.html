@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- ASIDE -->
+            <div id="aside" class="col-md-3">
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Price</h3>
+                    <div class="price-filter">
+                        <form method="get">
+                            <div class="input-number price-min">
+                                <input id="price-min" type="number" name="min_price" value="{{ min_price|default:'' }}" placeholder="Min (KSh)">
+                            </div>
+                            <span>-</span>
+                            <div class="input-number price-max">
+                                <input id="price-max" type="number" name="max_price" value="{{ max_price|default:'' }}" placeholder="Max (KSh)">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /aside Widget -->
+
+                <!-- aside Widget -->
+                <div class="aside">
+                    <h3 class="aside-title">Sort By</h3>
+                    <form method="get">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sort" value="price_low" {% if selected_sort == 'price_low' %}checked{% endif %}>
+                                Price: Low to High
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sort" value="price_high" {% if selected_sort == 'price_high' %}checked{% endif %}>
+                                Price: High to Low
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sort" value="newest" {% if selected_sort == 'newest' %}checked{% endif %}>
+                                Newest
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sort" value="name_asc" {% if selected_sort == 'name_asc' %}checked{% endif %}>
+                                Name (A-Z)
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Apply Sort</button>
+                    </form>
+                </div>
+                <!-- /aside Widget -->
+            </div>
+            <!-- /ASIDE -->
+
+            <!-- STORE -->
+            <div id="store" class="col-md-9">
+                <!-- store top filter -->
+                <div class="store-filter clearfix">
+                    <div class="store-sort">
+                        <label>
+                            Show:
+                            <select class="input-select">
+                                <option value="0">9</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <!-- /store top filter -->
+
+                <!-- store products -->
+                <div class="row">
+                    {% for product in products %}
+                    <!-- product -->
+                    <div class="col-md-4 col-xs-6">
+                        <div class="product">
+                            <div class="product-img">
+                                <img src="{{ product.image.url }}" alt="">
+                                <div class="product-label">
+                                    <span class="sale">-{{ product.discount }}%</span>
+                                </div>
+                            </div>
+                            <div class="product-body">
+                                <p class="product-category">{{ product.category.name }}</p>
+                                <h3 class="product-name">
+                                    <a href="{% url 'shopease:product_detail' product.id %}">{{ product.name }}</a>
+                                </h3>
+                                <h4 class="product-price">
+                                    KSh {{ product.discounted_price|floatformat:0 }}
+                                    <del class="product-old-price">KSh {{ product.price|floatformat:0 }}</del>
+                                </h4>
+                                <div class="product-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                            </div>
+                            <div class="add-to-cart">
+                                <form method="post" action="{% url 'shopease:add_to_cart_hot_deal' product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="add-to-cart-btn">
+                                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /product -->
+                    {% empty %}
+                    <div class="col-md-12">
+                        <p class="text-center">No hot deals available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- /store products -->
+
+                <!-- store bottom filter -->
+                {% if products.has_other_pages %}
+                <div class="store-filter clearfix">
+                    <ul class="store-pagination">
+                        {% if products.has_previous %}
+                            <li><a href="?page={{ products.previous_page_number }}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"><i class="fa fa-angle-left"></i></a></li>
+                        {% endif %}
+                        
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                                <li class="active">{{ num }}</li>
+                            {% else %}
+                                <li><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if products.has_next %}
+                            <li><a href="?page={{ products.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+                <!-- /store bottom filter -->
+            </div>
+            <!-- /STORE -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %}

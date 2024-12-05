@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Contact Form Section -->
+    <div class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="section-title">Contact Us</h2>
+                    <form method="POST" action="{% url 'shopease:contact_submit' %}" id="contactForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="subject" class="form-control" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" class="form-control" placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <div id="contact-message"></div>
+                        <button type="submit" class="primary-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Form Section -->
+    <div class="newsletter-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="section-title">Subscribe to Our Newsletter</h3>
+                    <form method="POST" action="{% url 'shopease:newsletter_signup' %}" class="newsletter-form" id="newsletterForm">
+                        {% csrf_token %}
+                        <div class="newsletter-wrapper">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <button type="submit" class="newsletter-btn">Subscribe</button>
+                        </div>
+                        <div id="newsletter-message" class="mt-2"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript remains the same -->
+<script>
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const messageDiv = document.getElementById('newsletter-message');
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageDiv.textContent = data.message;
+        messageDiv.className = data.success ? 'alert alert-success' : 'alert alert-danger';
+        if (data.success) {
+            form.reset();
+        }
+    })
+    .catch(error => {
+        messageDiv.textContent = 'An error occurred. Please try again.';
+        messageDiv.className = 'alert alert-danger';
+    });
+});
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = this;
+    const messageDiv = document.getElementById('contact-message');
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Disable submit button while processing
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageDiv.textContent = data.message;
+        messageDiv.className = data.success ? 'alert alert-success' : 'alert alert-danger';
+        if (data.success) {
+            form.reset();
+        }
+    })
+    .catch(error => {
+        messageDiv.textContent = 'An error occurred. Please try again.';
+        messageDiv.className = 'alert alert-danger';
+    })
+    .finally(() => {
+        // Re-enable submit button
+        submitButton.disabled = false;
+        submitButton.textContent = 'Send Message';
+    });
+});
+</script>
+{% endblock %} 

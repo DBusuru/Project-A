@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Order #{{ order.id }}</h2>
+    
+    <!-- Order Details -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Order Information</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Order Date:</strong> {{ order.created_at|date:"M d, Y" }}</p>
+            <div class="order-details">
+                <div class="detail-item">
+                    <span>Order Total:</span>
+                    <span>KES {{ order.total_amount|floatformat:2 }}</span>
+                </div>
+                <div class="detail-item">
+                    <span>Amount Paid:</span>
+                    <span>KES {{ order.amount_paid|floatformat:2 }}</span>
+                </div>
+                {% if order.remaining_amount %}
+                <div class="detail-item">
+                    <span>Remaining:</span>
+                    <span>KES {{ order.remaining_amount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <p><strong>Status:</strong> {{ order.status }}</p>
+        </div>
+    </div>
+    
+    <!-- Tracking Information -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Tracking Updates</h4>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                {% for update in tracking_updates %}
+                    <div class="timeline-item">
+                        <div class="timeline-date">{{ update.timestamp|date:"M d, Y H:i" }}</div>
+                        <div class="timeline-content">
+                            <h5>{{ update.status }}</h5>
+                            {% if update.location %}<p>Location: {{ update.location }}</p>{% endif %}
+                            {% if update.description %}<p>{{ update.description }}</p>{% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No tracking updates available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Installment Plan -->
+    {% if installment_plan %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Installment Plan</h4>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {{ installment_plan.progress_percentage }}%">
+                        {{ installment_plan.progress_percentage|floatformat:1 }}%
+                    </div>
+                </div>
+                <p><strong>Total Amount:</strong> ${{ installment_plan.total_amount }}</p>
+                <p><strong>Amount Paid:</strong> ${{ installment_plan.amount_paid }}</p>
+                <p><strong>Remaining Balance:</strong> ${{ installment_plan.remaining_balance }}</p>
+                
+                {% if not installment_plan.is_completed %}
+                    <form method="post" action="{% url 'shopease:make_installment_payment' installment_plan.id %}" class="mt-3">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Payment Amount</label>
+                            <input type="number" name="amount" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Payment Method</label>
+                            <select name="payment_method" class="form-control" required>
+                                <option value="mpesa">M-PESA</option>
+                                <option value="card">Credit Card</option>
+                                <option value="bank">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes (Optional)</label>
+                            <textarea name="notes" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Make Payment</button>
+                    </form>
+                {% endif %}
+                
+                <!-- Payment History -->
+                <h5 class="mt-4">Payment History</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in installment_payments %}
+                            <tr>
+                                <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                                <td>${{ payment.amount }}</td>
+                                <td>{{ payment.status }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3">No payments recorded yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

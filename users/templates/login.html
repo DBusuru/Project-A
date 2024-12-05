@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Login</h2>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="form-group mb-3">
+                                <label for="id_username">Email</label>
+                                <input type="email" name="username" class="form-control" id="id_username" required>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label for="id_password">Password</label>
+                                <input type="password" name="password" class="form-control" id="id_password" required>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="primary-btn">Login</button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="{% url 'users:register' %}">Register here</a></p>
+                            <p><a href="{% url 'users:password_reset' %}">Forgot your password?</a></p>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="mb-2">Or login with:</p>
+                            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark">
+                                <i class="fab fa-google"></i> Google
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .primary-btn {
+        background: #D10024;
+        color: #FFF;
+        border: none;
+        padding: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        width: 100%;
+    }
+    .primary-btn:hover {
+        opacity: 0.9;
+    }
+    .form-control {
+        padding: 10px 15px;
+        border: 1px solid #E4E7ED;
+        border-radius: 3px;
+    }
+    .form-control:focus {
+        border-color: #D10024;
+        box-shadow: none;
+    }
+    label {
+        color: #2B2D42;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .btn-outline-dark {
+        border: 1px solid #E4E7ED;
+        padding: 8px 20px;
+        transition: all 0.3s;
+    }
+    .btn-outline-dark:hover {
+        background-color: #f8f9fa;
+        border-color: #D10024;
+        color: #D10024;
+    }
+    a {
+        color: #D10024;
+        text-decoration: none;
+    }
+    a:hover {
+        color: #A5001D;
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

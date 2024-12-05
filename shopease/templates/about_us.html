@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">About Shopease</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vision and Mission -->
+        <div class="row about-section">
+            <div class="col-md-6">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                    <h4>Our Vision</h4>
+                    <p>To be the leading e-commerce platform in Kenya, providing unparalleled shopping experiences and connecting customers with quality electronics and technology products.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fa fa-bullseye"></i>
+                    </div>
+                    <h4>Our Mission</h4>
+                    <p>To revolutionize online shopping in Kenya by offering a secure, convenient, and customer-centric platform with competitive prices and exceptional service.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Choose Us -->
+        <div class="row about-section">
+            <div class="col-md-12">
+                <h3 class="sub-title">Why Choose Shopease?</h3>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <i class="fa fa-shield"></i>
+                    <h5>Secure Shopping</h5>
+                    <p>Protected payments and verified sellers for your peace of mind.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <i class="fa fa-truck"></i>
+                    <h5>Fast Delivery</h5>
+                    <p>Quick and reliable delivery across Kenya.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <i class="fa fa-money"></i>
+                    <h5>Best Prices</h5>
+                    <p>Competitive prices and regular deals on quality products.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <i class="fa fa-headphones"></i>
+                    <h5>24/7 Support</h5>
+                    <p>Always here to help with dedicated customer service.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Story -->
+        <div class="row about-section">
+            <div class="col-md-6">
+                <div class="story-content">
+                    <h3 class="sub-title">Our Story</h3>
+                    <p>Founded in 2024, Shopease emerged from a vision to transform the online shopping experience in Kenya. We recognized the need for a reliable platform where Kenyans could access quality electronics and technology products with confidence.</p>
+                    <p>Starting with a small selection of products, we've grown to become a trusted name in Kenya's e-commerce space, serving thousands of satisfied customers.</p>
+                    <p>Our commitment to authenticity, customer satisfaction, and continuous innovation drives us forward as we work to make technology accessible to all Kenyans.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="about-image">
+                    <img src="{% static 'img/about-us.jpg' %}" alt="About Shopease" class="img-responsive">
+                </div>
+            </div>
+        </div>
+
+        <!-- Team -->
+        <div class="row about-section">
+            <div class="col-md-12">
+                <h3 class="sub-title">Our Leadership</h3>
+            </div>
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'img/team/david.jpg' %}" alt="David Busuru">
+                    <h4>David Busuru</h4>
+                    <p class="position">Founder & CEO</p>
+                    <p class="description">A visionary leader with extensive experience in e-commerce and technology.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cta-section">
+                    <h3>Start Shopping with Confidence</h3>
+                    <p>Join thousands of satisfied customers who trust Shopease for their electronics needs.</p>
+                    <a href="{% url 'shopease:index' %}" class="primary-btn">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

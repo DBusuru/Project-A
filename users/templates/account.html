@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome to Your Account</h2>
+    <p>Hello, {{ user.username }}! This is your account dashboard.</p>
+
+    <div class="profile-section">
+        <h3>Your Profile Picture</h3>
+        {% if user.profile_pic %}
+            <img src="{{ user.profile_pic.url }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 200px;">
+        {% else %}
+            <img src="/static/images/default-profile.png" alt="Default Profile Picture" class="img-thumbnail" style="max-width: 200px;">
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="profile_pic">Upload a new profile picture:</label>
+            <input type="file" name="profile_pic" id="profile_pic">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
